@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:spring="http://www.w3.org/1999/XSL/Transform">
+
+<head th:fragment="css">
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Inventario de Equipos S&M</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="css/scrolling-nav.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav" th:fragment="navigation">
+    <div class="container">
+      <a class="navbar-brand js-scroll-trigger" href="#page-top" th:text="#{inicio}">Inicio</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#inventario" th:text="#{inventario}"></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#alquiler" th:text="Ventas"></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#facturas" th:text="#{factura}"></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#clientes" th:text="Proveedores"></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header class="bg-primary text-white" th:fragment="header">
+    <div class="container text-center">
+      <h1 th:text="#{bienvenida}"></h1>
+      <p class="lead" th:text="#{slogan}"></p>
+    </div>
+  </header>
+
+  <section id="inventario">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <h2 th:text="#{inventario}"></h2>
+          <p class="lead" th:text="#{inventario_descripcion}"></p>
+          <button type="button" class="btn btn-primary btn-lg" onclick="window.location='/inventario';" th:text="#{inventario_acceder}"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="alquiler" class="bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <h2 th:text="Ventas"></h2>
+          <p class="lead">Realizar y visualizar ventas</p>
+          <button type="button" class="btn btn-primary btn-lg" onclick="window.location='/alquiler';">Acceder Ventas</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="facturas">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <h2 th:text="#{factura}">Facturas</h2>
+          <p class="lead" th:text="#{factura_descripcion}"></p>
+          <button type="button" class="btn btn-primary btn-lg" onclick="window.location='/facturas';" th:text="#{factura_acceder}"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="clientes" class="bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <h2 th:text="Proveedores"></h2>
+          <p class="lead">Administrar proveedores</p>
+          <button type="button" class="btn btn-primary btn-lg" onclick="window.location='/clientes';">Acceder Proveedores</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-5 bg-dark">
+    <div class="container">
+      <p class="m-0 text-center text-white">Copyright &copy; S&M 2020</p>
+    </div>
+    <!-- /.container -->
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Plugin JavaScript -->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+th:text="#{cliente_acceder}"
+  <!-- Custom JavaScript for this theme -->
+  <script src="js/scrolling-nav.js"></script>
+
+</body>
+
+</html>
