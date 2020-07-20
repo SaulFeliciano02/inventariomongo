@@ -324,10 +324,10 @@
                     <div class="form-group">
                         <label>Cod. Almacen
                             <select name="subFamilia" required>
-                                <option th:text = "${listaSubFamilias[0].nombre} ?: 'Selecciona un Almacen'">-</option>
-                                <th:block th:each="subFamilia : ${listaSubFamilias}">
-                                    <option th:text = "${subFamilia.nombre}"></option>
-                                </th:block>
+<!--                                <option th:text = "${listaSubFamilias[0].nombre} ?: 'Selecciona un Almacen'">-</option>-->
+<!--                                <th:block th:each="subFamilia : ${listaSubFamilias}">-->
+<!--                                    <option th:text = "${subFamilia.nombre}"></option>-->
+<!--                                </th:block>-->
                             </select>
                         </label>
                     </div>
@@ -366,10 +366,10 @@
                     <div class="form-group">
                         <label>Familia
                             <select name="familia" required>
-                                <option th:text = "${listaFamilias[0].id}  + '-' + ${listaFamilias[0].nombre}?: '-Seleccione una familia-'"></option>
-                                <th:block th:each="familia : ${listaFamilias}">
-                                    <option th:text = "${familia.id} + '-' + ${familia.nombre}"></option>
-                                </th:block>
+<!--                                <option th:text = "${listaFamilias[0].id}  + '-' + ${listaFamilias[0].nombre}?: '-Seleccione una familia-'"></option>-->
+<!--                                <th:block th:each="familia : ${listaFamilias}">-->
+<!--                                    <option th:text = "${familia.id} + '-' + ${familia.nombre}"></option>-->
+<!--                                </th:block>-->
                             </select>
                         </label>
                     </div>
