@@ -15,6 +15,9 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    compile "org.mongodb:mongodb-driver-sync:4.0.4"
+    compile "org.mongodb:mongodb-driver-core:4.0.4"
+    compile "org.mongodb:bson:4.0.4"
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
