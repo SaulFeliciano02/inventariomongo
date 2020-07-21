@@ -59,7 +59,7 @@
         <div class="col-lg-8 mx-auto">
           <h2 th:text="#{inventario}"></h2>
           <p class="lead" th:text="#{inventario_descripcion}"></p>
-          <button type="button" class="btn btn-primary btn-lg" onclick="window.location='/inventario';" th:text="#{inventario_acceder}"></button>
+          <button type="button" class="btn btn-primary btn-lg" onclick="window.location='/inventory';" th:text="#{inventario_acceder}"></button>
         </div>
       </div>
     </div>
@@ -84,7 +84,7 @@
         <div class="col-lg-8 mx-auto">
           <h2 th:text="#{factura}">Facturas</h2>
           <p class="lead" th:text="#{factura_descripcion}"></p>
-          <button type="button" class="btn btn-primary btn-lg" onclick="window.location='/facturas';" th:text="#{factura_acceder}"></button>
+          <button type="button" class="btn btn-primary btn-lg" onclick="window.location='/invoice';" th:text="#{factura_acceder}"></button>
         </div>
       </div>
     </div>
@@ -96,7 +96,19 @@
         <div class="col-lg-8 mx-auto">
           <h2 th:text="Proveedores"></h2>
           <p class="lead">Administrar proveedores</p>
-          <button type="button" class="btn btn-primary btn-lg" onclick="window.location='/clientes';">Acceder Proveedores</button>
+          <button type="button" class="btn btn-primary btn-lg" onclick="window.location='/supply';">Acceder Proveedores</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="movimientos">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <h2 th:text="Movimientos"></h2>
+          <p class="lead">Mostrar movimientos del inventario</p>
+          <button type="button" class="btn btn-primary btn-lg" onclick="window.location='/';">Acceder Movimientos</button>
         </div>
       </div>
     </div>

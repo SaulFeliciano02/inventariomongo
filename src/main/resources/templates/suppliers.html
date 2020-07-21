@@ -20,9 +20,10 @@
     <script type="text/javascript" src="js/animations.js"></script>
 </head>
 <body>
-    <nav th:replace="thymeleaf/navbarForOtherTemplatesBesidesIndex :: navigation"></nav>
-    <header th:replace="thymeleaf/home :: header"></header>
-    <div th:insert="thymeleaf/tableClients :: body2"></div>
+    <nav th:replace="/navbarForOtherTemplatesBesidesIndex :: navigation"></nav>
+    <header th:replace="/index :: header"></header>
+    <div th:insert="/tableClients :: TableStyle2"></div>
+    <div th:insert="/tableClients :: body2"></div>
 
     <!-- Bootstrap core JavaScript -->
     <script src="vendor/jquery/jquery.min.js"></script>
