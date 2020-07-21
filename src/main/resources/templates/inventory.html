@@ -20,10 +20,12 @@
     <script type="text/javascript" src="js/animations.js"></script>
 </head>
 <body>
+
     <nav th:replace="/navbarForOtherTemplatesBesidesIndex :: navigation"></nav>
     <header th:replace="/index :: header"></header>
     <div th:insert="/tableInventory :: TableStyle2"></div>
     <div th:insert="/tableInventory :: body2"></div>
+
 
     <!-- Bootstrap core JavaScript -->
     <script src="vendor/jquery/jquery.min.js"></script>
