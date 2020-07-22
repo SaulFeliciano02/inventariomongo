@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import symongo.inventariomongo.connection.MongoConnect;
 import symongo.inventariomongo.entities.InfoAlmacen;
 import symongo.inventariomongo.services.ArticulosServices;
+import symongo.inventariomongo.services.MovimientosServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.List;
 public class InventoryController {
 
     @Autowired public ArticulosServices articulosServices;
+    @Autowired public MovimientosServices movimientosServices;
 
     @RequestMapping("")
     public String inventory(){
@@ -42,6 +44,11 @@ public class InventoryController {
         listaInfos.add(info1); listaInfos.add(info2); listaInfos.add(info3);
         articulosServices.guardarArticulo(codigoArticulo, descripcion, unidadCompra, listaInfos);
         return "";
+    }
 
+    @RequestMapping("/testUsoDiario")
+    public String usoDiario(){
+        movimientosServices.ventaDiaria(3);
+        return "/index";
     }
 }
