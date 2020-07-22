@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import symongo.inventariomongo.connection.MongoConnect;
 import symongo.inventariomongo.entities.InfoAlmacen;
+import symongo.inventariomongo.entities.OrdenCompra;
 import symongo.inventariomongo.services.ArticulosServices;
 import symongo.inventariomongo.services.MovimientosServices;
+import symongo.inventariomongo.services.OrdenCompraServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,7 @@ public class InventoryController {
 
     @Autowired public ArticulosServices articulosServices;
     @Autowired public MovimientosServices movimientosServices;
+    @Autowired public OrdenCompraServices ordenCompraServices;
 
     @RequestMapping("")
     public String inventory(){
@@ -49,6 +52,16 @@ public class InventoryController {
     @RequestMapping("/testUsoDiario")
     public String usoDiario(){
         movimientosServices.ventaDiaria(3);
+        return "/index";
+    }
+
+    @RequestMapping("/generarOrden")
+    public String generarOrden(List<Integer> articulos, List<Integer> cantidad, List<String> fechas){
+        for(int i = 0; i < articulos.size(); i++){
+            if(articulosServices.validateArticulo(articulos.get(i)) != 0){
+                ordenCompraServices.guardarOrden(articulosServices.obtenerFechaYCantidad(articulos.get(i), fechas.get(i), movimientosServices.ventaDiaria(articulos.get(i)), cantidad.get(i)));
+            }
+        }
         return "/index";
     }
 }

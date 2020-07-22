@@ -5,20 +5,28 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
+import org.bson.conversions.Bson;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import symongo.inventariomongo.connection.MongoConnect;
 import symongo.inventariomongo.entities.InfoAlmacen;
+import symongo.inventariomongo.entities.OrdenCompra;
 
 import javax.print.Doc;
 import javax.websocket.RemoteEndpoint;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.DoubleConsumer;
 
+import static com.mongodb.client.model.Filters.eq;
+
 @Service
 public class ArticulosServices {
+    @Autowired SuplidoresServices suplidoresServices;
+
     private MongoCollection<Document> articulos = MongoConnect.database.getCollection("articulos");
 
     public void guardarArticulo(String codigoArticulo, String descripcion, String unidadCompra, ArrayList<InfoAlmacen> infoList){
@@ -39,9 +47,15 @@ public class ArticulosServices {
         articulos.insertOne(articulo);
     }
 
-    public void obtenerFechaYCantidad(int codigoArticulo, String fechaPedida, int usoDiario, int cantidadMinima){
+    public long validateArticulo(int codigoArticulo){
+        Document query = new Document("codigoArticulo", new Document("$eq", codigoArticulo));
+        long result = articulos.countDocuments(query);
+        return result;
+    }
+
+    public OrdenCompra obtenerFechaYCantidad(int codigoArticulo, String fechaPedida, int usoDiario, int cantidadMinima){
         List<Document> parametrosAggregate = new ArrayList<>();
-        String today = LocalDate.now().toString().replace("-", "/");
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")).toString().replace("-", "/");
 
         //MATCH PARA FILTRAR POR ARTICULO
         Document firstMatchParameters = new Document("codigoArticulo", codigoArticulo);
@@ -53,8 +67,8 @@ public class ArticulosServices {
 
         //SETEANDO VALOR DE DIAS DISPONIBLES
         BasicDBList subParameters = new BasicDBList();
-        subParameters.add(new Document("$dateFromString", new Document("dateString", fechaPedida).append("format", "%Y/%m/%d")));
-        subParameters.add(new Document("$dateFromString", new Document("dateString", today).append("format", "%Y/%m/%d")));
+        subParameters.add(new Document("$dateFromString", new Document("dateString", fechaPedida).append("format", "%d/%m/%Y")));
+        subParameters.add(new Document("$dateFromString", new Document("dateString", today).append("format", "%d/%m/%Y")));
 
         BasicDBList MultParameters = new BasicDBList();
         MultParameters.add(new BasicDBObject("$subtract", subParameters));
@@ -93,9 +107,9 @@ public class ArticulosServices {
 
         BasicDBList dateAddParemeters = new BasicDBList();
         dateAddParemeters.add(new Document("$dateFromString",
-                new Document("dateString", today).append("format", "%Y/%m/%d")));
+                new Document("dateString", today).append("format", "%d/%m/%Y")));
         dateAddParemeters.add(new BasicDBObject("$multiply", MultParameters));
-        Document switch_restantesLT_thenParameters = new Document("format", "%Y/%m/%d")
+        Document switch_restantesLT_thenParameters = new Document("format", "%d/%m/%Y")
                         .append("date", new BasicDBObject("$add", dateAddParemeters));
 
         Document switch_restantesLT = new Document("case", getSwitchLTParameters())
@@ -122,8 +136,8 @@ public class ArticulosServices {
         notEqual.add(fechaPedida);
 
         subParameters = new BasicDBList();
-        subParameters.add(new Document("$dateFromString", new Document("dateString", "$fechaEntrega").append("format", "%Y/%m/%d")));
-        subParameters.add(new Document("$dateFromString", new Document("dateString", today).append("format", "%Y/%m/%d")));
+        subParameters.add(new Document("$dateFromString", new Document("dateString", "$fechaEntrega").append("format", "%d/%m/%Y")));
+        subParameters.add(new Document("$dateFromString", new Document("dateString", today).append("format", "%d/%m/%Y")));
 
         divParameters = new BasicDBList();
         divParameters.add(new BasicDBObject("$subtract", subParameters));
@@ -178,9 +192,17 @@ public class ArticulosServices {
 
         AggregateIterable<Document> resultado = articulos.aggregate(parametrosAggregate);
 
+        String fechaEntrega = "";
+        int montoTotal = 0;
+        int tiempoEntrega = 0;
         for(Document document : resultado){
+            fechaEntrega = document.get("fechaEntrega").toString();
+            montoTotal = (int) Double.parseDouble(document.get("cantidadPedir").toString());
+            tiempoEntrega = (int) Double.parseDouble(document.get("diasDisponibles").toString());
             System.out.println(document);
         }
+        OrdenCompra ordenCompra = suplidoresServices.getOrdenSuplidor(codigoArticulo, fechaEntrega, montoTotal, tiempoEntrega);
+        return ordenCompra;
     }
 
     public BasicDBObject getSwitchGTEParameters(){
