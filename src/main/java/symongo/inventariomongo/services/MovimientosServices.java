@@ -14,11 +14,15 @@ import java.util.List;
 public class MovimientosServices {
     private MongoCollection<Document> movimientos = MongoConnect.database.getCollection("movimientos");
 
+    public void guardarMovimiento(int codigoArticulo, int codigoAlmacen){
+
+    }
+
     public int ventaDiaria(int codigoArticulo){
         List<Document> parametrosAggregate = new ArrayList<>();
 
         //MATCH PARA SOLO OBTENER LOS MOVIMIENTOS DE ENTRADA
-        Document matchParameters = new Document("tipoMovimiento", "ENTRADA").append("codigoArticulo", codigoArticulo);
+        Document matchParameters = new Document("tipoMovimiento", "SALIDA").append("codigoArticulo", codigoArticulo);
         parametrosAggregate.add(new Document("$match", matchParameters));
 
         //GROUP ARTICULOS POR CODIGO Y FECHA
