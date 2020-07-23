@@ -238,30 +238,30 @@
 </head>
 
 <body th:fragment="body2">
-<div class="md-form container-fluid">
-    <div class="row justify-content-center">
-        <div class="col-sm-2" align="center">
-            <label> No. Orden
-                <input type="text" class="form-control">
-            </label>
-        </div>
-        <div class="col-sm-2" align="center">
-            <label> Suplidor
-                <input type="number" class="form-control">
-            </label>
-        </div>
-        <div class="col-sm-2" align="center">
-            <label> Fecha Orden
-                <input type="date" class="form-control">
-            </label>
-        </div>
-        <div class="col-sm-2" align="center">
-            <label> Monto Total
-                <input type="date" class="form-control">
-            </label>
+<form role="form" method="post" action="/orders/buscarOrdenes" enctype="multipart/form-data">
+    <div class="md-form container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-sm-2" align="center">
+                <label> Articulo
+                    <input type="text" name="articulo" value="0" class="form-control">
+                </label>
+            </div>
+            <div class="col-sm-2" align="center">
+                <label> Suplidor
+                    <input type="number" name="suplidor" value="0" class="form-control">
+                </label>
+            </div>
+            <div class="col-sm-2" align="center">
+                <label> Fecha Orden
+                    <input type="date" name="fecha" value="" class="form-control">
+                </label>
+            </div>
+            <div class="col-sm-2" align="center">
+                <input type="submit" class="btn btn-success" value="Buscar Ordenes">
+            </div>
         </div>
     </div>
-</div>
+</form>
 <div class="container">
     <h3 class="text-danger" th:text="${error}"></h3>
     <div class="table-wrapper">
@@ -280,26 +280,20 @@
                 <th>Cantidad</th>
                 <th>Precio</th>
                 <th>Importe</th>
+                <th>Suplidor</th>
+                <th>Fecha Orden</th>
             </tr>
             </thead>
             <tbody>
-            <th:block th:each="cliente : ${listaClientes}">
+            <th:block th:each="orden : ${listaOrdenes}">
                 <tr>
-                    <td>
-                        <span class="custom-checkbox">
-                            <input type="checkbox" th:id="'checkbox' + ${cliente.id}" name="options[]" value="1">
-                            <label th:for="'checkbox' + ${cliente.id}"></label>
-                        </span>
-                    </td>
-                    <td th:text = "${cliente.id}" th:id="${cliente.id}"></td>
-                    <td th:text = "${cliente.nombre}"></td>
-                    <td th:text = "${cliente.apellido}"></td>
-                    <td th:text = "${cliente.cedula}"></td>
-                    <td> <img th:src="@{'data:'+${cliente.image_properties}+';base64,'+${cliente.imagen}}" height=100 width=100 alt="*"></td>
-                    <td>
-                        <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit" th:id="${cliente.id} + '-' + ${cliente.nombre} + '-' + ${cliente.apellido} + '-' + ${cliente.cedula} + '-' + ${cliente.imagen}" onclick="edit_clicked(this.id)">&#xE254;</i></a>
-                        <a href="#deleteEmployeeModal" class="delete" data-toggle="modal" th:id="${cliente.id}" onclick="delete_clicked(this.id)"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-                    </td>
+                    <td th:text = "${orden.codigoArticulo}" th:id="${orden.codigoOrdenCompra}"></td>
+                    <td>I am a description</td>
+                    <td th:text = "${orden.montoTotal}"></td>
+                    <td th:text = "${orden.precioSuplidor}"></td>
+                    <td th:text = "${orden.precioCompra}"></td>
+                    <td th:text = "${orden.codigoSuplidor}"></td>
+                    <td th:text = "${orden.fechaOrden}"></td>
                 </tr>
             </th:block>
             </tbody>

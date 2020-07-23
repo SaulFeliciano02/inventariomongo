@@ -9,6 +9,8 @@ public class OrdenCompra {
     private int precioSuplidor;
     private int precioCompra;
 
+    public OrdenCompra(){}
+
     public OrdenCompra(int codigoOrdenCompra, int codigoSuplidor, String fechaOrden, int montoTotal, int codigoArticulo, int precioSuplidor, int precioCompra){
         this.codigoOrdenCompra = codigoOrdenCompra;
         this.codigoSuplidor = codigoSuplidor;

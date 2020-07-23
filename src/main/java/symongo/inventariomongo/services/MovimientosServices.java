@@ -7,6 +7,8 @@ import org.bson.Document;
 import org.springframework.stereotype.Service;
 import symongo.inventariomongo.connection.MongoConnect;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,8 +16,14 @@ import java.util.List;
 public class MovimientosServices {
     private MongoCollection<Document> movimientos = MongoConnect.database.getCollection("movimientos");
 
-    public void guardarMovimiento(int codigoArticulo, int codigoAlmacen){
+    public void guardarMovimiento(int codigoArticulo, int cantidad, String tipoMovimiento){
+        String today =  LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString().replace("-", "/");
 
+        Document movimiento = new Document();
+        movimiento.put("codigoMovimiento", (int) movimientos.countDocuments() + 1);
+        movimiento.put("tipoMovimiento", tipoMovimiento);
+        movimiento.put("codigoArticulo", codigoArticulo);
+        movimiento.put("cantidad", cantidad);
     }
 
     public int ventaDiaria(int codigoArticulo){

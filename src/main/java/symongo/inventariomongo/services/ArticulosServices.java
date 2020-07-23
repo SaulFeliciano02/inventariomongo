@@ -29,20 +29,13 @@ public class ArticulosServices {
 
     private MongoCollection<Document> articulos = MongoConnect.database.getCollection("articulos");
 
-    public void guardarArticulo(String codigoArticulo, String descripcion, String unidadCompra, ArrayList<InfoAlmacen> infoList){
+    public void guardarArticulo(String codigoArticulo, String descripcion, String unidadCompra, int totalGeneral){
         Document articulo = new Document();
-        articulo.append("codigoArticulo", codigoArticulo);
-        articulo.append("descripcion", descripcion);
-        articulo.append("unidadCompra", unidadCompra);
+        articulo.put("codigoArticulo", codigoArticulo);
+        articulo.put("descripcion", descripcion);
+        articulo.put("unidadCompra", unidadCompra);
+        articulo.put("totalGeneral", totalGeneral);
 
-
-        ArrayList<HashMap<String, Integer>> almacenInfo = new ArrayList<>();
-        for(int i = 0; i < 3; i++){
-            HashMap<String, Integer> almacen = new HashMap<>();
-            almacen.put(infoList.get(i).getCodigoAlmacen(), infoList.get(i).getBalanceActual());
-            almacenInfo.add(almacen);
-        }
-        articulo.put("infoAlmacen", almacenInfo);
 
         articulos.insertOne(articulo);
     }
@@ -55,7 +48,7 @@ public class ArticulosServices {
 
     public OrdenCompra obtenerFechaYCantidad(int codigoArticulo, String fechaPedida, int usoDiario, int cantidadMinima){
         List<Document> parametrosAggregate = new ArrayList<>();
-        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")).toString().replace("-", "/");
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString().replace("-", "/");
 
         //MATCH PARA FILTRAR POR ARTICULO
         Document firstMatchParameters = new Document("codigoArticulo", codigoArticulo);
@@ -67,8 +60,8 @@ public class ArticulosServices {
 
         //SETEANDO VALOR DE DIAS DISPONIBLES
         BasicDBList subParameters = new BasicDBList();
-        subParameters.add(new Document("$dateFromString", new Document("dateString", fechaPedida).append("format", "%d/%m/%Y")));
-        subParameters.add(new Document("$dateFromString", new Document("dateString", today).append("format", "%d/%m/%Y")));
+        subParameters.add(new Document("$dateFromString", new Document("dateString", fechaPedida).append("format", "%Y/%m/%d")));
+        subParameters.add(new Document("$dateFromString", new Document("dateString", today).append("format", "%Y/%m/%d")));
 
         BasicDBList MultParameters = new BasicDBList();
         MultParameters.add(new BasicDBObject("$subtract", subParameters));
@@ -107,9 +100,9 @@ public class ArticulosServices {
 
         BasicDBList dateAddParemeters = new BasicDBList();
         dateAddParemeters.add(new Document("$dateFromString",
-                new Document("dateString", today).append("format", "%d/%m/%Y")));
+                new Document("dateString", today).append("format", "%Y/%m/%d")));
         dateAddParemeters.add(new BasicDBObject("$multiply", MultParameters));
-        Document switch_restantesLT_thenParameters = new Document("format", "%d/%m/%Y")
+        Document switch_restantesLT_thenParameters = new Document("format", "%Y/%m/%d")
                         .append("date", new BasicDBObject("$add", dateAddParemeters));
 
         Document switch_restantesLT = new Document("case", getSwitchLTParameters())
@@ -136,8 +129,8 @@ public class ArticulosServices {
         notEqual.add(fechaPedida);
 
         subParameters = new BasicDBList();
-        subParameters.add(new Document("$dateFromString", new Document("dateString", "$fechaEntrega").append("format", "%d/%m/%Y")));
-        subParameters.add(new Document("$dateFromString", new Document("dateString", today).append("format", "%d/%m/%Y")));
+        subParameters.add(new Document("$dateFromString", new Document("dateString", "$fechaEntrega").append("format", "%Y/%m/%d")));
+        subParameters.add(new Document("$dateFromString", new Document("dateString", today).append("format", "%Y/%m/%d")));
 
         divParameters = new BasicDBList();
         divParameters.add(new BasicDBObject("$subtract", subParameters));

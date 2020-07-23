@@ -37,16 +37,9 @@ public class InventoryController {
     public String saveArticulo(@RequestParam("codigoArticulo") String codigoArticulo,
                                @RequestParam("descripcion") String descripcion,
                                @RequestParam("unidadCompra") String unidadCompra,
-                               @RequestParam("balanceActual1") int balanceActual1,
-                               @RequestParam("balanceActual2") int balanceActual2,
-                               @RequestParam("balanceActual3") int balanceActual3){
-        InfoAlmacen info1 = new InfoAlmacen("1", balanceActual1);
-        InfoAlmacen info2 = new InfoAlmacen("2", balanceActual2);
-        InfoAlmacen info3 = new InfoAlmacen("3", balanceActual3);
-        ArrayList<InfoAlmacen> listaInfos = new ArrayList<>();
-        listaInfos.add(info1); listaInfos.add(info2); listaInfos.add(info3);
-        articulosServices.guardarArticulo(codigoArticulo, descripcion, unidadCompra, listaInfos);
-        return "";
+                               @RequestParam("balanceActual") int total){
+        articulosServices.guardarArticulo(codigoArticulo, descripcion, unidadCompra, total);
+        return "redirect:/inventory";
     }
 
     @RequestMapping("/testUsoDiario")
@@ -55,13 +48,8 @@ public class InventoryController {
         return "/index";
     }
 
-    @RequestMapping("/generarOrden")
-    public String generarOrden(List<Integer> articulos, List<Integer> cantidad, List<String> fechas){
-        for(int i = 0; i < articulos.size(); i++){
-            if(articulosServices.validateArticulo(articulos.get(i)) != 0){
-                ordenCompraServices.guardarOrden(articulosServices.obtenerFechaYCantidad(articulos.get(i), fechas.get(i), movimientosServices.ventaDiaria(articulos.get(i)), cantidad.get(i)));
-            }
-        }
-        return "/index";
+    @RequestMapping("/mostrarOrdenes")
+    public String mostrarOrden(){
+        return "orders";
     }
 }

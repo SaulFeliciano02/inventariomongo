@@ -238,28 +238,30 @@
 </head>
 
 <body th:fragment="body2">
-<div class="md-form container-fluid">
-    <div class="row justify-content-center">
-        <div class="col-sm-2" align="center">
-            <label> Componente
-                <input type="text" class="form-control">
-            </label>
-        </div>
-        <div class="col-sm-2" align="center">
-            <label> Cantidad
-                <input type="number" class="form-control">
-            </label>
-        </div>
-        <div class="col-sm-2" align="center">
-            <label> Fecha Requerida
-                <input type="date" class="form-control">
-            </label>
-        </div>
-        <div class="col-sm-2" align="center">
-            <a href="#" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Agregar Componente</span></a>
+<form role="form" method="post" action="/generarOrden" enctype="multipart/form-data">
+    <div class="md-form container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-sm-2" align="center">
+                <label> Componente
+                    <input type="text" name="componente" class="form-control">
+                </label>
+            </div>
+            <div class="col-sm-2" align="center">
+                <label> Cantidad
+                    <input type="number" name="cantidad" class="form-control">
+                </label>
+            </div>
+            <div class="col-sm-2" align="center">
+                <label> Fecha Requerida
+                    <input type="date" name="fecha" class="form-control">
+                </label>
+            </div>
+            <div class="col-sm-2" align="center">
+                <input type="submit" class="btn btn-success" value="Agregar Componente">
+            </div>
         </div>
     </div>
-</div>
+</form>
 <div class="container">
     <h3 class="text-danger" th:text="${error}"></h3>
     <div class="table-wrapper">

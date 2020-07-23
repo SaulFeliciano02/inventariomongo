@@ -22,7 +22,7 @@ public class SuplidoresServices {
 
         //MATCH
         parametrosAggregate.add(new Document("$match", new Document("codigoArticulo", codigoArticulo)
-                .append("tiempoEntrega", tiempoEntrega)));
+                .append("tiempoEntrega", new Document("$lte", tiempoEntrega))));
 
         //SORT
         parametrosAggregate.add(new Document("$sort", new Document("precioCompra", 1)));
@@ -43,7 +43,7 @@ public class SuplidoresServices {
 
         AggregateIterable<Document> resultado = suplidores.aggregate(parametrosAggregate);
 
-        OrdenCompra ordenCompra = null;
+        OrdenCompra ordenCompra = new OrdenCompra();
         for(Document document : resultado){
             ordenCompra.setCodigoOrdenCompra((int) ordenesCompra.countDocuments() + 1);
             ordenCompra.setCodigoSuplidor((int) Double.parseDouble(document.get("codigoSuplidor").toString()));
