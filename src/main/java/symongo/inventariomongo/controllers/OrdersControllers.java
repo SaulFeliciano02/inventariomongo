@@ -21,8 +21,11 @@ public class OrdersControllers {
 
     @RequestMapping("")
     public String orders(Model model, @ModelAttribute("ordenes") ArrayList<OrdenCompra> orden){
-        if(orden != null){
+        if(orden.size() > 0){
             model.addAttribute("listaOrdenes", orden);
+        }
+        else{
+            model.addAttribute("listaOrdenes", ordenCompraServices.getOrdenes());
         }
         return "/orders";
     }

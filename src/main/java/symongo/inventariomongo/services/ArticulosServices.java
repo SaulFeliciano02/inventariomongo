@@ -56,7 +56,7 @@ public class ArticulosServices {
     public ArrayList<Articulo> getArticulos(){
         MongoCursor<Document> articulosCursor = articulos.find().iterator();
         Document result = new Document();
-        ArrayList<Articulo> articulos = new ArrayList<>();
+        ArrayList<Articulo> articulosLista = new ArrayList<>();
         try{
             while(articulosCursor.hasNext()){
                 result = articulosCursor.next();
@@ -64,12 +64,12 @@ public class ArticulosServices {
                 String descripcion = result.get("descripcion").toString();
                 int balanceActual = result.getInteger("totalGeneral");
                 String unidad = result.get("unidadCompra").toString();
-                articulos.add(new Articulo(codigoArticulo, descripcion, balanceActual, unidad));
+                articulosLista.add(new Articulo(codigoArticulo, descripcion, balanceActual, unidad));
             }
         } finally {
             articulosCursor.close();
         }
-        return articulos;
+        return articulosLista;
     }
 
     public long validateArticulo(int codigoArticulo){
@@ -226,8 +226,11 @@ public class ArticulosServices {
             tiempoEntrega = (int) Double.parseDouble(document.get("diasDisponibles").toString());
             System.out.println(document);
         }
-        OrdenCompra ordenCompra = suplidoresServices.getOrdenSuplidor(codigoArticulo, fechaEntrega, montoTotal, tiempoEntrega);
-        return ordenCompra;
+        if(montoTotal > 0){
+            OrdenCompra ordenCompra = suplidoresServices.getOrdenSuplidor(codigoArticulo, fechaEntrega, montoTotal, tiempoEntrega);
+            return ordenCompra;
+        }
+        return null;
     }
 
     public BasicDBObject getSwitchGTEParameters(){
