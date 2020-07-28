@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import symongo.inventariomongo.connection.MongoConnect;
+import symongo.inventariomongo.entities.Movimiento;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -17,13 +19,52 @@ public class MovimientosServices {
     private MongoCollection<Document> movimientos = MongoConnect.database.getCollection("movimientos");
 
     public void guardarMovimiento(int codigoArticulo, int cantidad, String tipoMovimiento){
-        String today =  LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString().replace("-", "/");
+        String today =  LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
         Document movimiento = new Document();
         movimiento.put("codigoMovimiento", (int) movimientos.countDocuments() + 1);
         movimiento.put("tipoMovimiento", tipoMovimiento);
         movimiento.put("codigoArticulo", codigoArticulo);
         movimiento.put("cantidad", cantidad);
+        movimiento.put("fecha", today);
+
+        movimientos.insertOne(movimiento);
+
+
+    }
+
+    public ArrayList<Movimiento> buscarMovimientos(String tipoMovimiento, int codigoArticulo, String fecha){
+        ArrayList<Movimiento> listaMovimientos = new ArrayList<>();
+        if(!tipoMovimiento.equalsIgnoreCase("") || codigoArticulo >= 0 || !fecha.equalsIgnoreCase("")){
+            List<Document> parametrosAggregate = new ArrayList<>();
+            //MATCHES
+            Document matchParameters = new Document();
+            if(!tipoMovimiento.equalsIgnoreCase("")){
+                matchParameters.append("tipoMovimiento", tipoMovimiento);
+            }
+            if(codigoArticulo >= 0){
+                matchParameters.append("codigoArticulo", codigoArticulo);
+            }
+            if(!fecha.equalsIgnoreCase("")){
+                matchParameters.append("fecha", fecha);
+            }
+
+            parametrosAggregate.add(new Document("$match", matchParameters));
+
+            AggregateIterable<Document> resultado = movimientos.aggregate(parametrosAggregate);
+
+            for(Document document : resultado){
+                int codigoMovimientoResult = document.getInteger("codigoMovimiento");
+                String tipoMovimientoResult = document.getString("tipoMovimiento");
+                int codigoArticuloResult = document.getInteger("codigoArticulo");
+                int cantidadResult = document.getInteger("cantidad");
+                String fechaResult = document.getString("fecha");
+                listaMovimientos.add(new Movimiento(codigoMovimientoResult, tipoMovimientoResult, codigoArticuloResult, cantidadResult, fechaResult));
+            }
+        }
+        return listaMovimientos;
+
+
     }
 
     public int ventaDiaria(int codigoArticulo){

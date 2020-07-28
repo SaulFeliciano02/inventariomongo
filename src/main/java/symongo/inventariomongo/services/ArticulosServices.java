@@ -2,13 +2,16 @@ package symongo.inventariomongo.services;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import symongo.inventariomongo.connection.MongoConnect;
+import symongo.inventariomongo.entities.Articulo;
 import symongo.inventariomongo.entities.InfoAlmacen;
 import symongo.inventariomongo.entities.OrdenCompra;
 
@@ -29,7 +32,7 @@ public class ArticulosServices {
 
     private MongoCollection<Document> articulos = MongoConnect.database.getCollection("articulos");
 
-    public void guardarArticulo(String codigoArticulo, String descripcion, String unidadCompra, int totalGeneral){
+    public void guardarArticulo(int codigoArticulo, String descripcion, String unidadCompra, int totalGeneral){
         Document articulo = new Document();
         articulo.put("codigoArticulo", codigoArticulo);
         articulo.put("descripcion", descripcion);
@@ -38,6 +41,35 @@ public class ArticulosServices {
 
 
         articulos.insertOne(articulo);
+    }
+
+    public void updateArticulo(int codigoArticulo, String tipoEntrada, int cantidad){
+        if(tipoEntrada.equalsIgnoreCase("ENTRADA")){
+            articulos.findOneAndUpdate(eq("codigoArticulo", codigoArticulo), new Document("$inc", new Document("totalGeneral", cantidad)));
+        }
+        else if(tipoEntrada.equalsIgnoreCase("SALIDA")){
+            articulos.findOneAndUpdate(eq("codigoArticulo", codigoArticulo), new Document("$inc", new Document("totalGeneral", cantidad*-1)));
+        }
+
+    }
+
+    public ArrayList<Articulo> getArticulos(){
+        MongoCursor<Document> articulosCursor = articulos.find().iterator();
+        Document result = new Document();
+        ArrayList<Articulo> articulos = new ArrayList<>();
+        try{
+            while(articulosCursor.hasNext()){
+                result = articulosCursor.next();
+                int codigoArticulo = result.getInteger("codigoArticulo");
+                String descripcion = result.get("descripcion").toString();
+                int balanceActual = result.getInteger("totalGeneral");
+                String unidad = result.get("unidadCompra").toString();
+                articulos.add(new Articulo(codigoArticulo, descripcion, balanceActual, unidad));
+            }
+        } finally {
+            articulosCursor.close();
+        }
+        return articulos;
     }
 
     public long validateArticulo(int codigoArticulo){

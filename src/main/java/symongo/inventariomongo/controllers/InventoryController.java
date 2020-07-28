@@ -7,9 +7,12 @@ import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import symongo.inventariomongo.connection.MongoConnect;
+import symongo.inventariomongo.entities.Articulo;
 import symongo.inventariomongo.entities.InfoAlmacen;
 import symongo.inventariomongo.entities.OrdenCompra;
 import symongo.inventariomongo.services.ArticulosServices;
@@ -28,13 +31,13 @@ public class InventoryController {
     @Autowired public OrdenCompraServices ordenCompraServices;
 
     @RequestMapping("")
-    public String inventory(){
-        System.out.println(MongoConnect.database);
+    public String inventory(Model model){
+        model.addAttribute("listaArticulos", articulosServices.getArticulos());
         return "/inventory";
     }
 
     @RequestMapping("/guardarArticulo")
-    public String saveArticulo(@RequestParam("codigoArticulo") String codigoArticulo,
+    public String saveArticulo(@RequestParam("codigoArticulo") int codigoArticulo,
                                @RequestParam("descripcion") String descripcion,
                                @RequestParam("unidadCompra") String unidadCompra,
                                @RequestParam("balanceActual") int total){

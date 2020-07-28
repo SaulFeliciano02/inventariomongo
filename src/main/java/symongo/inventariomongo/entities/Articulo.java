@@ -8,6 +8,13 @@ public class Articulo {
 
     public Articulo(){}
 
+    public Articulo(int codigoArticulo, String descripcion, int balanceActual, String unidad){
+        this.codigoArticulo = codigoArticulo;
+        this.descripcion = descripcion;
+        this.balanceActual = balanceActual;
+        this.unidad = unidad;
+    }
+
     public int getCodigoArticulo() {
         return codigoArticulo;
     }
